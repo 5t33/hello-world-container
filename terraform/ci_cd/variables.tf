@@ -29,3 +29,8 @@ variable "github_repo" {
 variable "pipeline_bucket_name" {
   type = string
 }
+
+variable "environments" {
+  type = list(string)
+  default = ["use2_tst"]
+}

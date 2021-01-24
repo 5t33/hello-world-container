@@ -1,5 +1,8 @@
-# resource "aws_iam_role" "codepipeline_role" {
-#   name               = "${var.project_name}-codepipeline"
+
+
+# resource "aws_iam_role" "deploymment_role" {
+#   for_each           = var.environments
+#   name               = "${var.project_name}-deploy-${each.value}"
 #   # This doesn't necessarily need to be a template file this
 #   # leaves the option open.
 #   assume_role_policy = jsonencode(
@@ -9,7 +12,7 @@
 #               Action    = "sts:AssumeRole"
 #               Effect    = "Allow"
 #               Principal = {
-#                   AWS = module.codepipeline
+#                   AWS = 
 #               }
 #           },
 #       ]
@@ -20,4 +23,18 @@
 #   force_detach_policies = false
 #   max_session_duration  = 3600
 #   path                  = "/service-role/"
+# }
+
+# resource "aws_iam_policy" "deployment_role_policy" {
+#   for_each = var.environments
+#   description = "Policy used to deploy hello world service to environment ${each.value}"
+#   path        = "/service-role/codepipeline/"
+#   policy = jsonencode({
+#       Statement = [
+#         {
+#           Action
+#         }
+#       ],
+#       "Version": "2012-10-17",
+#   })
 # }
