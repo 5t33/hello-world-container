@@ -1,2 +1,6 @@
 node_modules
 dist
+tst.secret.tfvars.json
+secret.auto.tfvars.json
+*terraform.tfstate*
+.terraform

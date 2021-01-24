@@ -1,0 +1,32 @@
+
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+      docker: 18
+    commands:
+      - apt-get update
+      - apt-get install jq git
+      # Install latest aws-cli since included version doesn't support task def secrets
+      # ecs_deploy script doesn't support them either but it will soon
+      - curl 'https://s3.amazonaws.com/aws-cli/awscli-bundle.zip' -o 'awscli-bundle.zip'
+      - unzip awscli-bundle.zip
+      - python3 ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+  build:
+    commands:
+      - echo $ENV
+      - echo $AWS_ACCOUNT_ID
+      - echo $AWS_REGION
+      - echo $ECS_CLUSTER
+      - echo $SERVICE_NAME
+      - echo $DEPLOY_ROLE
+      - ASSUME_ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/$DEPLOY_ROLE"
+      - git clone https://github.com/5t33/ecs-deploy.git
+      - ECS_DEPLOY=./ecs-deploy/ecs-deploy
+      - IMAGE=`cat imagedefinitions.json | jq '.[0].imageUri' | sed 's/\"//g'`
+      - $ECS_DEPLOY -c $ECS_CLUSTER -r $AWS_REGION -n $SERVICE_NAME -i $IMAGE -t 600 -a ASSUME_ROLE_ARN
+  post_build:
+    commands:
+      - jest smoke-tests
