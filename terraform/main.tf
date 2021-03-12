@@ -5,7 +5,7 @@ locals {
 }
 
 module "hello-world" {
-    source      = "git@github.com:5t33/ecs-service-module.git?ref=v0.0.6-alpha"
+    source      = "git::https://github.com/5t33/ecs-service-module.git?ref=v0.0.6-alpha"
     environment = var.environment
     aws_region  = var.aws_region
     name_preffix = var.name_preffix
