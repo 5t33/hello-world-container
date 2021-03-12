@@ -1,4 +1,8 @@
 # Heavily borrowed from https://github.com/cn-terraform/terraform-aws-ecs-fargate-service/blob/master/variables.tf
+variable "environment" {
+  type = string
+}
+
 #------------------------------------------------------------------------------
 # Misc
 #------------------------------------------------------------------------------
@@ -17,16 +21,14 @@ variable "ecs_cluster_name" {
   type = string
 }
 
-variable "aws_region" {
-  description = "The Aws region to use"
-  default     = "us-west-2"
-}
+#------------------------------------------------------------------------------
+# IAM
+#------------------------------------------------------------------------------
 
-variable "aws_profile" {
-  description = "The Aws profile to use"
-  default     = "default"
+variable "ecs_service_role_name" {
+  description = "iam role for the ecs service."
+  default = "AWSServiceRoleForECS"
 }
-
 
 #------------------------------------------------------------------------------
 # AWS Networking
@@ -46,14 +48,26 @@ variable "desired_count" {
 # AWS LOAD BALANCER
 #------------------------------------------------------------------------------
 
-variable "listener_arn" {
-  description = "Listener ARN"
-  type        = string
+variable "lb_name" {
+  description = "Name of lb to use"
+  type = string
 }
 
 variable "tg_health_check_path" {
   description = "Target group health check path"
   type = string
+}
+
+variable "tg_port" {
+  description = "Port that ECS will recieve traffic on from the LB listener"
+  type        = string
+  default = 80
+}
+
+variable "tg_protocol" {
+  description = "Protocol that ECS will recieve traffic via the LB"
+  type        = string
+  default = "HTTP"
 }
 
 variable "tg_health_check_timeout" {
